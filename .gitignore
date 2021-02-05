@@ -2,3 +2,5 @@
 log/*.log
 .byebug_history
 *.gem
+.idea/
+coverage/

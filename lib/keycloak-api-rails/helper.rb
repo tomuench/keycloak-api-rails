@@ -59,6 +59,14 @@ module Keycloak
       env[ROLES_KEY] = token.dig("realm_access", "roles")
     end
 
+    # Has the User access to a specific role?
+    # @param [Hash] env
+    # @param [String] role
+    def self.access_to_role?(env, role)
+      roles = current_user_roles(env)
+      roles.empty? || roles.include?(role)
+    end
+
     def self.current_resource_roles(env)
       env[RESOURCE_ROLES_KEY]
     end

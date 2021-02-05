@@ -20,6 +20,7 @@ module Keycloak
         @app.call(env)
       end
     rescue TokenError => e
+      puts e.original_error
       authentication_failed(e.message)
     end
 

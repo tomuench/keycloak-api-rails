@@ -12,6 +12,7 @@ require_relative "keycloak-api-rails/public_key_resolver"
 require_relative "keycloak-api-rails/public_key_cached_resolver"
 require_relative "keycloak-api-rails/service"
 require_relative "keycloak-api-rails/middleware"
+require_relative "keycloak-api-rails/controller_with_authorization"
 require_relative "keycloak-api-rails/railtie" if defined?(Rails)
 
 module Keycloak
