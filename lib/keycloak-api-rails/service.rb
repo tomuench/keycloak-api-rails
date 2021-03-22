@@ -1,11 +1,12 @@
 module Keycloak
   class Service
     
-    def initialize(key_resolver)
+    def initialize(realm_id, key_resolver)
+      config = Keycloak.config(realm_id)
       @key_resolver                          = key_resolver
-      @skip_paths                            = Keycloak.config.skip_paths
-      @logger                                = Keycloak.config.logger
-      @token_expiration_tolerance_in_seconds = Keycloak.config.token_expiration_tolerance_in_seconds
+      @skip_paths                            = config.skip_paths
+      @logger                                = config.logger
+      @token_expiration_tolerance_in_seconds = config.token_expiration_tolerance_in_seconds
     end
 
     def decode_and_verify(token)

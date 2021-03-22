@@ -7,12 +7,13 @@ module Keycloak
 
     def call(env)
       method = env["REQUEST_METHOD"]
-      path   = env["PATH_INFO"]
-      uri    = env["REQUEST_URI"]
+      path = env["PATH_INFO"]
+      uri = env["REQUEST_URI"]
+      assign_realm_id(env)
 
       if service.need_authentication?(method, path, env)
         logger.debug("Start authentication for #{method} : #{path}")
-        token         = service.read_token(uri, env)
+        token = service.read_token(uri, env)
         decoded_token = service.decode_and_verify(token)
         authentication_succeeded(env, decoded_token)
       else
@@ -26,7 +27,7 @@ module Keycloak
 
     def authentication_failed(message)
       logger.info(message)
-      [401, {"Content-Type" => "application/json"}, [ { error: message }.to_json]]
+      [401, {"Content-Type" => "application/json"}, [{error: message}.to_json]]
     end
 
     def authentication_succeeded(env, decoded_token)
@@ -41,8 +42,25 @@ module Keycloak
       @app.call(env)
     end
 
+    def assign_realm_id(env)
+      domain = extract_realm_id(env["HTTP_ORIGIN"]) # http://localhost:8100 , https://ostendorf.pkr-system.de
+      self.realm_id = if domain == "localhost"
+                        "Development"
+                      else
+                        domain.downcase
+                      end
+    end
+
+    def extract_realm_id(origin)
+      origin.match(%r{//([a-z0-9A-Z]+)})[1]
+    rescue StandardError
+      "Development"
+    end
+
+    attr_accessor :realm_id
+
     def service
-      Keycloak.service
+      Keycloak.service(realm_id)
     end
 
     def logger
@@ -50,7 +68,7 @@ module Keycloak
     end
 
     def config
-      Keycloak.config
+      Keycloak.config(realm_id)
     end
   end
 end
