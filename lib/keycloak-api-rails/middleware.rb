@@ -47,7 +47,7 @@ module Keycloak
       self.realm_id = if domain == "localhost"
                         "Development"
                       else
-                        domain.downcase
+                        domain.capitalize
                       end
     end
 
