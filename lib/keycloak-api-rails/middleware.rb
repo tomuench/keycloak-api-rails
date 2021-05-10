@@ -44,6 +44,7 @@ module Keycloak
 
     def assign_realm_id(env)
       domain = extract_realm_id(env["HTTP_ORIGIN"]) # http://localhost:8100 , https://ostendorf.pkr-system.de
+      domain = domain.gsub("test-","")
       self.realm_id = if domain == "localhost"
                         "Development"
                       else
@@ -52,7 +53,7 @@ module Keycloak
     end
 
     def extract_realm_id(origin)
-      origin.match(%r{//([a-z0-9A-Z]+)})[1]
+      origin.match(%r{//([a-z0-9A-Z-]+)})[1]
     rescue StandardError
       "Development"
     end
