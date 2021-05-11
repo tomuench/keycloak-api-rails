@@ -45,6 +45,8 @@ module Keycloak
     def assign_realm_id(env)
       domain = extract_realm_id(env["HTTP_ORIGIN"]) # http://localhost:8100 , https://ostendorf.pkr-system.de
       domain = domain.gsub("test-","")
+      Rails.logger.info "Domain ORG #{env["HTTP_ORIGIN"]}"
+      Rails.logger.info "Domain #{domain}"
       self.realm_id = if domain == "localhost"
                         "Development"
                       else
