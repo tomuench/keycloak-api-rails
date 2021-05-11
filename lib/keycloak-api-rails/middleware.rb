@@ -47,6 +47,7 @@ module Keycloak
       domain = domain.gsub("test-","")
       Rails.logger.info "Domain ORG #{env["HTTP_ORIGIN"]}"
       Rails.logger.info "Domain #{domain}"
+      Rails.logger.info "Request URI #{env["REQUEST_URI"]}"
       self.realm_id = if domain == "localhost"
                         "Development"
                       else
